@@ -59,8 +59,7 @@ class PapupPage():
         assert(self.file_id is not None)
         assert(self.total_pages is not None)
         # build legend
-        tmpl = "PAPUP file print out Version {version} - go to https://github.com/kratenko/papup for further information\nID: {uuid} - Page: {page}/{pages} - Blocks: {blocks} - Columns: {columns}"
-        tmpl = "PAPUP v{version} file print out - see https://github.com/kratenko/papup for instructions\nID: {uuid} - Page: {page}/{pages} - Blocks: {blocks} - Columns: {columns}"
+        tmpl = "Papup version {version} file print out - see https://github.com/kratenko/papup for instructions\nID: {uuid} - Page: {page}/{pages} - Blocks: {blocks} - Columns: {columns}"
         txt = tmpl.format(version=0, uuid=self.file_id, page=self.page_number + 1,
                           pages=self.total_pages, blocks=self.actual_blocks, columns=self.cols)
         self.page_legend = txt.split("\n")
@@ -106,7 +105,7 @@ class PapupPage():
             yy = y * (self.BLOCK_WIDTH + 3) + 4
             draw.line((0, yy, im.size[0], yy), "black")
         im.paste(get_logo(), (5, 5))
-        self.image = im
+        self.page_image = im
 
     def generate_block_image(self, data):
         assert(len(data) == self.BLOCK_PAYLOAD)

@@ -18,8 +18,9 @@ import math
 import reportlab
 from paper import PapupPage
 from reportlab.lib.utils import ImageReader
+from pdf import build_pdf
 
-fname = "gpl-3.0.txt"
+fname = "faust1.txt"
 
 with open(fname, "rb") as f:
     data = f.read()
@@ -62,7 +63,7 @@ def rs_decode_data(n, k, data, length=None):
 
 class PapupPayload():
 
-    def __init__(self, redundancy=1, compression=1, encryption=0):
+    def __init__(self, redundancy=1, compression=0, encryption=0):
         self.padding = None
         self.data = None
         self.redundancy = redundancy
@@ -77,9 +78,11 @@ class PapupPayload():
     def do_compression(self):
         if self.compression == 0:
             # no compression
+            print("no compression")
             pass
         elif self.compression == 1:
             # bz2, 9
+            print("bz2 compression")
             self.data = bz2.compress(self.data)
         else:
             raise ValueError(
@@ -127,9 +130,9 @@ class PapupFile():
         self.data_pos += space
 
     def cut_pages(self):
-        self.cut_next_page(16, 20)
+        self.cut_next_page(15, 16)
         while self.data_left():
-            self.cut_next_page(16, 24)
+            self.cut_next_page(15, 20)
         for page in self.pages:
             page.file_id = self.uuid
             page.total_pages = len(self.pages)
@@ -147,19 +150,4 @@ pf.generate_page_images()
 print(pf.pages[0].page_legend)
 # pf.pages[0].image.show()
 
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus.flowables import Image
-
-pdfmetrics.registerFont(TTFont('Mono', 'DejaVuSansMono.ttf'))
-
-top = 820
-c = canvas.Canvas("p1.pdf", bottomup=True)
-c.setFont('Mono', 10)
-p = pf.pages[0]
-for n, line in enumerate(p.page_legend):
-    c.drawString(20, top - 10 * n - 5, line)
-c.drawImage(ImageReader(p.image), 12, top - 30 - p.image.size[1])
-#c.drawInlineImage(ImageReader(p.image.convert("RGB")), 10, 50)
-c.save()
+build_pdf(pf, 'out.pdf')
