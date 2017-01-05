@@ -67,9 +67,9 @@ class PapupPage():
 
     def generate_page_header(self):
         header_raw = PAPUP_IDENT + struct.pack("!B", PAPUP_VERSION) + self.file_id.bytes + struct.pack(
-            "!HHHH", self.page_number, self.total_pages, self.actual_blocks, self.cols)
-        assert(len(header_raw) == 30)
-        rs = unireedsolomon.RSCoder(64, 30)
+            "!LLHH", self.page_number, self.total_pages, self.actual_blocks, self.cols)
+        assert(len(header_raw) == 34)
+        rs = unireedsolomon.RSCoder(64, 34)
         header_rs = rs.encode(header_raw).encode("L1")
         assert(len(header_rs) == 64)
         return header_rs
