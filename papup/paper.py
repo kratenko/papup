@@ -7,7 +7,8 @@ Created on 2017-01-03
 import struct
 import binascii
 import math
-import PIL
+import PIL.Image
+import PIL.ImageDraw
 
 import unireedsolomon
 from __init__ import PAPUP_IDENT, PAPUP_VERSION
